@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday!</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      /* Festive bright background */
+      background: radial-gradient(circle at top left, #ff80b5 0%, transparent 50%),
+                  radial-gradient(circle at bottom right, #ffdf6b 0%, transparent 50%),
+                  #ffeef4; /* soft pink base */
+      background-attachment: fixed;
+    }
+    .birthday-card {
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      animation: fadeIn 1s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div class="birthday-card bg-white w-full max-w-2xl p-8 md:p-12 rounded-3xl text-center">
+    <!-- Cake Icon -->
+    <div class="text-6xl mb-6 animate-bounce text-pink-500">
+      🎂
+    </div>
+
+    <!-- Birthday Song -->
+    <audio id="bgMusic" loop autoplay>
+      <source src="happy-birthday-266285.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+
+    <!-- Title -->
+    <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 mb-4">
+      🎉 Happy Birthday Brother! 🎉
+    </h1>
+
+    <!-- Message -->
+    <p class="text-xl md:text-2xl text-gray-700 mb-8 leading-relaxed">
+      Wishing you a day full of joy, laughter, and unforgettable moments.
+      May this year bring you all the happiness you deserve! 🥳
+    </p>
+
+    <!-- Button -->
+    <button id="confettiButton"
+      class="bg-pink-500 hover:bg-pink-600 active:bg-pink-700
+             text-white font-bold py-3 px-8 rounded-full
+             transition duration-300 ease-in-out transform 
+             hover:scale-105 focus:outline-none focus:ring-4
+             focus:ring-pink-300 text-lg w-full sm:w-auto">
+      Click for a Surprise! 🎊
+    </button>
+
+    <p class="mt-8 text-sm text-gray-500">
+      P.S. You can change the greeting above to add your brother’s name!
+    </p>
+  </div>
+
+  <script>
+    const confettiButton = document.getElementById('confettiButton');
+    const bgMusic = document.getElementById('bgMusic');
+
+    // Confetti function
+    function launchConfetti() {
+      confetti({
+        particleCount: 150,
+        spread: 90,
+        origin: { y: 0.6 },
+        colors: ['#ff80b5', '#ffdf6b', '#ffffff', '#ffc107']
+      });
+
+      const duration = 5 * 1000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+      function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      const interval = setInterval(() => {
+        const timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) return clearInterval(interval);
+
+        const particleCount = 50 * (timeLeft / duration + 0.5);
+
+        // Left side
+        confetti(Object.assign({}, defaults, {
+          particleCount,
+          origin: { x: randomInRange(0.1, 0.3), y: randomInRange(0.7, 0.9) }
+        }));
+
+        // Right side
+        confetti(Object.assign({}, defaults, {
+          particleCount,
+          origin: { x: randomInRange(0.7, 0.9), y: randomInRange(0.7, 0.9) }
+        }));
+      }, 250);
+    }
+
+    // Button click
+    confettiButton.addEventListener('click', () => {
+      if (bgMusic.paused) bgMusic.play();
+      launchConfetti();
+    });
+
+    // Gentle confetti on load
+    window.onload = () => {
+      setTimeout(() => {
+        confetti({
+          particleCount: 60,
+          spread: 80,
+          origin: { y: 0.7 },
+          colors: ['#ff80b5', '#ffdf6b', '#ffffff']
+        });
+      }, 500);
+    };
+  </script>
+</body>
+</html>
